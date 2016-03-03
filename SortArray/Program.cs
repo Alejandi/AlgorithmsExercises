@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,73 +9,119 @@ namespace SortArray
 {
     class Program
     {
-        static int[] a = new int[] { 6, 2, 3, 1, 7, 4, 8, 5 };
+        static int[] a = new int[] { 5, 3, 4, 2, 1, 8, 7, 6 };
+        //static int[] a = new int[] { 5, 3, 4, 2, 1, 6, 7, 8 };
+        //static int[] a = new int[] { 5, 7, 8, 6, 1, 4, 3, 2 };
         static int n = a.Length;
+        static int[] b = new int[n];
         static void Main(string[] args)
         {
-           
             int left = (n / 2) - 1;
             int right = left + 1;
-            for (int i = 0; i <= (n / 2); i++)
+
+            for (int i = 0; i < n / 2; i++)
             {
-                int numeroMayor = HallarNumeroMayorDeLaIzquierda(left);
-                Swap(numeroMayor, left);
+                int greatIndex = GetGreatesIndexLeftSubArray(left);
+                swap(greatIndex, left);
 
-                int numeroMenor = HallarNumeroMenorDeLaDerecha(right);
-                Swap(numeroMenor, right);
+                int lowesIndex = GetLowesIndexRigthSubArray(right);
+                swap(lowesIndex, right);
 
-                left = left - 1;
-                right = right + 1;                
+                left--;
+                right++;
             }
 
-            int[] b = new int[] { };
-            b = a;
-
-            //escribirArregloArrEnConsola(a);
-
-           
+            printArrr(a);
+            completedSorting();
+            printArrr(b);
         }
-        static int HallarNumeroMayorDeLaIzquierda(int left)
+        private static int GetGreatesIndexLeftSubArray(int left)
         {
-            int numeroMayor = 0;
-            for(int i = 0; i<= left; i++)
+            int greatesIndex = 0;
+            for (int i = 0; i <= left; i++)
             {
-                if (a[i] > numeroMayor)
+                if (a[i] > a[greatesIndex])
                 {
-                    numeroMayor = a[i];
+                    greatesIndex = i;
                 }
             }
-            return numeroMayor;
+            return greatesIndex;
         }
 
-        private static void Swap(int pas1, int pas2)
+        private static int GetLowesIndexRigthSubArray(int right)
         {
-            int tmp = pas1;
-            pas1 = pas2;
-            pas2 = tmp;
-        }
-
-        static int HallarNumeroMenorDeLaDerecha(int right)
-        {
-        int numeroMenor = right;
-        for (int i = 0; i>=right; i++)
+            int lowesIndex = right;
+            for (int i = right; i < n; i++)
             {
-                if (a[i] < numeroMenor)
+                if (a[i] < a[lowesIndex])
                 {
-                    numeroMenor = a[i];
-                }            
+                    lowesIndex = i;
+                }
             }
-            return numeroMenor;
+            return lowesIndex;
         }
-        private static void escribirArregloArrEnConsola(int[] arr)
+
+        private static void swap(int pos1, int pos2)
+        {
+            int tmp = a[pos1];
+            a[pos1] = a[pos2];
+            a[pos2] = tmp;
+        }
+
+        private static void completedSorting()
+        {
+
+            int k = 0;
+            int j = n / 2;
+
+            for (int i = 0; i < n / 2; ++i)
+            {
+                bool leftIsGreatter = true;
+                do
+                {
+
+                    if (j >= n)
+                    {
+                        b[k] = a[i];
+                        leftIsGreatter = false;
+                    }
+
+                    else if (a[i] < a[j])
+                    {
+                        b[k] = a[i];
+                        leftIsGreatter = false;
+                    }
+
+                    else
+                    {
+                        b[k] = a[j];
+                        j++;
+                        leftIsGreatter = true;
+                    }
+
+                  
+                    k++;
+                }
+                while (leftIsGreatter && k < n);
+            }
+
+            while (j < n)
+            {
+                b[k] = a[j];
+                k++;
+                j++;
+            }
+        }
+
+        private static void printArrr(int[] arrayprint)
         {
             for (int i = 0; i < n; i++)
             {
-                
-                Console.Write($"{arr[i]}");
+                Console.Write(arrayprint[i]);
             }
+            Console.WriteLine();
             Console.ReadLine();
+        }
 
-        }           
     }
 }
